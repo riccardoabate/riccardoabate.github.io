@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riccardo Abate</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  /* ---------- Font ospitati sul sito (nessuna richiesta a Google) ---------- */
+  @font-face { font-family: "Lato"; font-style: normal; font-weight: 400; font-display: swap;
+               src: url("fonts/lato-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Lato"; font-style: normal; font-weight: 700; font-display: swap;
+               src: url("fonts/lato-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-style: normal; font-weight: 400; font-display: swap;
+               src: url("fonts/open-sans-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-style: normal; font-weight: 500; font-display: swap;
+               src: url("fonts/open-sans-latin-500-normal.woff2") format("woff2"); }
+
+  :root {
+    --accent: #000080;      /* blu navy (0,0,128) per titoli, barra e pulsante */
+    --text: #212121;
+    --muted: #616161;
+    --link: #212121;
+    --bg: #ffffff;
+    --line: #e0e0e0;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Lato", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { color: var(--accent); }
+
+  /* ---------- Barra superiore ---------- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 64px;
+    transition: box-shadow .2s;
+  }
+  header.scrolled { box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .site-name {
+    font-family: "Open Sans", sans-serif; font-weight: 500;
+    font-size: 17px; letter-spacing: .5px; color: var(--accent);
+    text-decoration: none;
+  }
+  nav ul { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; }
+  nav li + li::before { content: "·"; color: #bdbdbd; margin: 0 10px; }
+  nav a {
+    font-family: "Open Sans", sans-serif; font-size: 14px;
+    text-decoration: none; color: var(--muted);
+    padding: 20px 0; border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--text); font-weight: 500; }
+  .menu-btn { display: none; background: none; border: 0; font-size: 24px; color: var(--accent); cursor: pointer; }
+
+  /* ---------- Titolo pagina ---------- */
+  .page-title { text-align: center; padding: 36px 16px 20px; }
+  .page-title h1 {
+    margin: 0; font-family: "Open Sans", sans-serif; font-weight: 500;
+    font-size: 40px; color: var(--accent);
+  }
+  .page-title::after {
+    content: ""; display: block; width: 60px; height: 4px;
+    background: var(--accent); margin: 14px auto 0;
+  }
+
+  /* ---------- Contenuto ---------- */
+  main { max-width: 1000px; margin: 0 auto; padding: 50px 24px 80px; }
+  section[data-page] { display: none; }
+  section[data-page].visible { display: block; }
+
+  .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .photo {
+    width: 100%; aspect-ratio: 4 / 3.3; object-fit: cover; display: block;
+    object-position: center 70%;   /* sposta il ritaglio verso il basso (lavagna) */
+    background: #eeeeee;
+  }
+  .photo-placeholder {
+    width: 100%; aspect-ratio: 4 / 3.3; background: #eeeeee; color: #9e9e9e;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .intro p { margin: 0 0 14px; }
+  .intro h3 { font-size: 15px; margin: 0 0 14px; }
+  .contact { margin-top: 42px; }
+
+  h2 { font-family: "Open Sans", sans-serif; font-weight: 500; color: var(--accent); font-size: 22px; margin: 32px 0 12px; }
+  h2:first-child { margin-top: 0; }
+  ol, ul.list { padding-left: 22px; }
+  li { margin-bottom: 8px; }
+
+  /* ---------- Modulo contatti ---------- */
+  .contact-form { max-width: 560px; display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+  .contact-form label { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px; }
+  .contact-form input, .contact-form textarea {
+    font: inherit; font-weight: 400; color: var(--text);
+    padding: 10px 12px; border: 1px solid #c8c8c8; border-radius: 4px; background: #fff;
+  }
+  .contact-form input:focus, .contact-form textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .contact-form textarea { resize: vertical; }
+  .contact-form button {
+    align-self: flex-start; font: inherit; font-weight: 700; color: #fff;
+    background: var(--accent); border: 0; border-radius: 4px; padding: 10px 26px; cursor: pointer;
+  }
+  .contact-form button:hover { background: #000060; }
+  .contact-form button:disabled { opacity: .6; cursor: default; }
+  .form-status { margin: 0; font-size: 14px; }
+  .form-status.ok { color: #2e7d32; }
+  .form-status.err { color: #c62828; }
+  .privacy { max-width: 560px; margin-top: 20px; font-size: 13px; color: var(--muted); }
+  .privacy summary { cursor: pointer; }
+  .privacy summary:hover { color: var(--text); }
+  .privacy p { margin: 8px 0; }
+
+  /* ---------- Immagini Interests ---------- */
+  .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+  .gallery figure { margin: 0; }
+  .gallery img, .gallery .photo-placeholder { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: flex; }
+  .gallery figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; text-align: center; }
+
+  footer { text-align: center; color: #9e9e9e; font-size: 12px; padding: 24px; border-top: 1px solid var(--line); }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 760px) {
+    header { padding: 0 16px; }
+    .menu-btn { display: block; }
+    nav { display: none; position: absolute; top: 64px; left: 0; right: 0; background: var(--bg); box-shadow: 0 4px 8px rgba(0,0,0,.1); }
+    nav.open { display: block; }
+    nav ul { flex-direction: column; align-items: stretch; }
+    nav li + li::before { display: none; }
+    nav a { display: block; padding: 12px 16px; }
+    .intro, .gallery { grid-template-columns: 1fr; }
+    .page-title h1 { font-size: 32px; }
+    main { padding: 30px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header id="top">
+  <a class="site-name" href="#home">Riccardo Abate</a>
+  <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#ripetizioni">Ripetizioni</a></li>
+      <li><a href="#interests">Interests</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="page-title"><h1 id="title">Home</h1></div>
+
+<main>
+  <!-- ================= HOME ================= -->
+  <section data-page="home" data-title="Home">
+    <div class="intro">
+      <div>
+        <!-- Metti la tua foto nella stessa cartella con nome "home_photo.jpg" -->
+        <img class="photo" src="home_photo.jpg" alt="Foto di Riccardo Abate"
+             onerror="this.outerHTML='<div class=&quot;photo-placeholder&quot;>La tua foto (home_photo.jpg)</div>'">
+      </div>
+      <div>
+        <h3>Welcome!</h3>
+        <p>I am a student at <a href="https://www.polimi.it/">Politecnico di Milano</a>,
+           where I am attending a bachelor degree in <a href="https://www.polimi.it/formazione/corsi-di-laurea/dettaglio-corso/ingegneria-fisica">Engineering Physics</a>.
+           My interests are in physics, mathematics and wherever these two fields intersect.</p>
+        <p>Here is my <a href="cv.pdf">Curriculum Vitae</a> (last updated nov/2026).</p>
+
+        <div class="contact">
+          <h3>Contact Information</h3>
+          <p>Email: <a href="mailto:riccardo2.abate@mail.polimi.it">riccardo2.abate@mail.polimi.it</a></p>
+          <p>For <a href="#ripetizioni">private tutoring (ripetizioni)</a> only:
+             <a href="mailto:abateripetizioni@gmail.com">abateripetizioni@gmail.com</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RIPETIZIONI ================= -->
+  <section data-page="ripetizioni" data-title="Ripetizioni">
+    <h2>Materie</h2>
+    <ul class="list">
+      <li><strong>Matematica</strong> — Scuole Elementari / Medie / Superiori</li>
+      <li><strong>Fisica</strong> — Scuole Superiori </li>
+      <li><strong>Analisi I/II</strong> - Corsi Universitari </li>
+      <li><strong>Algebra Lineare</strong> - Corsi Universitari </li>
+      <li><strong>Fisica I/II</strong> - Corsi Universitari</li>
+    </ul>
+    <h2>Modalità e tariffe</h2>
+    <p>Gli orari precisi andranno definiti insieme, le tariffe sono comprese tra 15-25€/h, in base alla materia.</p>
+    <ul class="list">
+      <li><strong>In presenza:</strong> Milano e Brescia - Milano Lun a Ven, Brescia Sab </li>
+      <li><strong>Online:</strong> Lun a Sab su Google Meet</li>
+    </ul>
+    <h2>Contattami</h2>
+    <p>Compila il modulo per chiedere informazioni o prenotare una lezione.</p>
+    <form id="contact-form" class="contact-form">
+      <label>La tua email
+        <input type="email" name="email" required placeholder="nome@esempio.it">
+      </label>
+      <label>Oggetto
+        <input type="text" name="subject" required placeholder="Es. Ripetizioni di matematica">
+      </label>
+      <label>Messaggio
+        <textarea name="message" rows="6" required placeholder="Scrivi qui il tuo messaggio..."></textarea>
+      </label>
+      <!-- Campo trappola anti-spam: invisibile alle persone, i bot lo compilano e Formspree scarta il messaggio -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true"
+             style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
+      <button type="submit">Invia</button>
+      <p class="form-status" id="form-status" role="status"></p>
+    </form>
+
+    <!-- Informativa privacy (art. 13 GDPR) -->
+    <details class="privacy">
+      <summary>I dati che invii servono solo a risponderti. Informativa privacy</summary>
+      <p><strong>Titolare del trattamento:</strong> Riccardo Abate,
+         <a href="mailto:abateripetizioni@gmail.com">abateripetizioni@gmail.com</a>.</p>
+      <p><strong>Dati raccolti:</strong> l'indirizzo email, l'oggetto e il testo del messaggio che scrivi nel modulo.</p>
+      <p><strong>Finalità e base giuridica:</strong> rispondere alla tua richiesta di informazioni o di lezioni
+         (art. 6, par. 1, lett. b GDPR: misure precontrattuali adottate su tua richiesta).
+         I dati non vengono usati per pubblicità né ceduti a terzi.</p>
+      <p><strong>Destinatari:</strong> il modulo è gestito da Formspree, Inc. (Stati Uniti), che riceve il messaggio
+         e me lo inoltra via email; i messaggi sono poi conservati nella mia casella Gmail (Google).
+         Formspree e Google trattano i dati per mio conto, secondo le rispettive informative privacy.</p>
+      <p><strong>Trasferimento fuori dall'UE:</strong> poiché Formspree e Google hanno sede negli Stati Uniti,
+         i dati possono essere trasferiti fuori dall'Unione Europea. Per Google il trasferimento si basa sulla
+         decisione di adeguatezza EU-U.S. Data Privacy Framework (art. 45 GDPR); per Formspree sulle clausole
+         contrattuali standard approvate dalla Commissione Europea (art. 46 GDPR), come indicato nella sua
+         <a href="https://formspree.io/security/">pagina sulla sicurezza</a>
+         (vedi anche la sua <a href="https://formspree.io/legal/privacy-policy/">informativa privacy</a>).</p>
+      <p><strong>Natura del conferimento:</strong> inviare i dati è facoltativo, ma senza un indirizzo email
+         non posso risponderti.</p>
+      <p><strong>Decisioni automatizzate:</strong> i dati non sono usati per decisioni automatizzate né per profilazione.</p>
+      <p><strong>Conservazione:</strong> i messaggi sono conservati per un massimo di 5 anni dall'ultimo contatto,
+         poi vengono cancellati. Puoi chiederne la cancellazione anticipata in qualsiasi momento.</p>
+      <p><strong>I tuoi diritti:</strong> puoi chiedere in qualsiasi momento di accedere ai tuoi dati, correggerli,
+         cancellarli, limitarne il trattamento, opporti al trattamento o riceverli in un formato leggibile
+         (portabilità), scrivendo all'indirizzo sopra (artt. 15–21 GDPR). Hai anche il diritto di presentare reclamo al
+         <a href="https://www.garanteprivacy.it/">Garante per la protezione dei dati personali</a>.</p>
+      <p><strong>Cookie:</strong> questo sito non usa cookie né strumenti di tracciamento.</p>
+    </details>
+  </section>
+
+  <!-- ================= INTERESTS ================= -->
+  <section data-page="interests" data-title="Interests">
+    <h2>Mathematics</h2>
+    <p>Mathematics is the language of Nature. We can see the beauty of it everywhere, from the symmetries in a molecule to the edges of a snowflake. I am
+      particularly interested in learning more about operator theory, group theory, PDEs, differential geometry and algebraic geometry.</p>
+    <h2>Physics</h2>
+    <p>If Mathematics is the language of Nature, then Physics must be its poetry. Physics is in everyday life. It is not simply
+      something we can spot, but rather the <em>very definition</em> of our reality - or, at least, the way in which reality presents itself to us. My
+    interests lie in Quantum Mechanics, Quantum Chromo-Dynamics, Mathematical Physics and Particle Physics.</p>
+
+    <!-- Metti le due immagini nella stessa cartella con nome "interests1_photo.jpg" e "interests2_photo.jpg" -->
+    <div class="gallery">
+      <figure>
+        <a href="https://home.cern/science/physics/higgs-boson/" target="_blank" rel="noopener">
+          <img src="interests1_photo.jpg" alt="Candidate Higgs boson events recorded by CMS and ATLAS"
+               onerror="this.outerHTML='<div class=&quot;photo-placeholder&quot;>interests1_photo.jpg</div>'">
+        </a>
+        <figcaption>
+          Candidate Higgs boson events from proton-proton collisions at the LHC:
+          the top event, recorded by CMS, shows a decay into two photons; the bottom event,
+          recorded by ATLAS, shows a decay into four muons.
+          Image: ATLAS and CMS Collaborations / CERN, 2013,
+          <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>,
+          via <a href="https://commons.wikimedia.org/wiki/File:Candidate_Higgs_Events_in_ATLAS_and_CMS.png">Wikimedia Commons</a>.
+          Original source: <a href="https://cds.cern.ch/images/OPEN-PHO-EXP-2013-003-1">CERN Document Server</a>.
+        </figcaption>
+      </figure>
+      <figure>
+        <a href="https://en.wikipedia.org/wiki/Complex_analysis" target="_blank" rel="noopener">
+          <img src="interests2_photo.jpg" alt="Riemann surface of the imaginary part of the complex logarithm"
+               onerror="this.outerHTML='<div class=&quot;photo-placeholder&quot;>interests2_photo.jpg</div>'">
+        </a>
+        <figcaption>
+          A plot of the multi-valued imaginary part of the complex logarithm, showing its branches:
+          going around the origin moves the value up or down, making the origin a branch point.
+          Image: Leonid 2,
+          <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>,
+          via <a href="https://commons.wikimedia.org/wiki/File:Riemann_surface_log.svg">Wikimedia Commons</a>.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer>© <span id="year"></span> Riccardo Abate</footer>
+
+<script>
+  const pages = document.querySelectorAll('section[data-page]');
+  const links = document.querySelectorAll('nav a');
+  function show() {
+    const id = (location.hash || '#home').slice(1);
+    // Confronto diretto con le pagine esistenti: un hash strano (es. #"x) non può più rompere lo script
+    const target = [...pages].find(p => p.dataset.page === id) || pages[0];
+    pages.forEach(p => p.classList.toggle('visible', p === target));
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + target.dataset.page));
+    document.getElementById('title').textContent = target.dataset.title;
+    document.querySelector('nav').classList.remove('open');
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+  window.addEventListener('scroll', () =>
+    document.getElementById('top').classList.toggle('scrolled', window.scrollY > 10));
+  document.getElementById('year').textContent = new Date().getFullYear();
+  show();
+
+  /* ---------- Modulo contatti ----------
+     MY_EMAIL: l'indirizzo a cui vuoi ricevere i messaggi.
+     FORM_ENDPOINT: lascialo vuoto e il pulsante "Invia" aprirà il programma di posta
+     del visitatore con il messaggio già compilato. Se invece crei un modulo gratuito su
+     https://formspree.io e incolli qui il suo indirizzo (es. "https://formspree.io/f/abcd1234"),
+     il messaggio ti arriverà direttamente via email senza che il visitatore apra nulla. */
+  const MY_EMAIL = 'abateripetizioni@gmail.com';
+  const FORM_ENDPOINT = 'https://formspree.io/f/moeeeeln';
+
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    const subject = form.subject.value.trim();
+    const message = form.message.value.trim();
+    status.className = 'form-status';
+
+    if (!FORM_ENDPOINT) {
+      const body = `${message}\n\n— Inviato dal sito da: ${email}`;
+      location.href = `mailto:${MY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      status.textContent = 'Si sta aprendo il tuo programma di posta: controlla e premi Invia.';
+      return;
+    }
+
+    const btn = form.querySelector('button');
+    btn.disabled = true;
+    status.textContent = 'Invio in corso...';
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new URLSearchParams({ email, _subject: subject, message, _gotcha: form._gotcha.value })
+      });
+      if (!res.ok) throw new Error();
+      form.reset();
+      status.textContent = 'Messaggio inviato, grazie! Ti risponderò al più presto.';
+      status.classList.add('ok');
+    } catch {
+      status.textContent = `Invio non riuscito. Puoi scrivermi direttamente a ${MY_EMAIL}.`;
+      status.classList.add('err');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
